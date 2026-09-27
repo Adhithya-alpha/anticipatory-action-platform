@@ -4,14 +4,7 @@ from google import genai
 from google.genai import types
 import json
 import folium
-from streamlit_folium import st_folium
-import asyncio
-
-# --- FIX: Event Loop Error ---
-try:
-    asyncio.get_running_loop()
-except RuntimeError:
-    asyncio.set_event_loop(asyncio.new_event_loop())
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="AI Anticipatory Action", layout="wide")
 
@@ -43,7 +36,10 @@ mock_weather_json = {
 st.subheader("1. Geospatial Exposure Layer")
 m = folium.Map(location=[lat, lon], zoom_start=10)
 folium.Circle(radius=15000, location=[lat, lon], popup="Cyclone Cone", color="red", fill=True).add_to(m)
-st_folium(m, height=400, width=800)
+
+# --- THE BULLETPROOF MAP FIX ---
+# We bypass the broken library and render the map as pure HTML
+components.html(m._repr_html_(), height=400)
 
 # AI Reasoning
 st.subheader("2. AI Reasoning & Dispatch Generation")
