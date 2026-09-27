@@ -1,3 +1,6 @@
+import nest_asyncio
+nest_asyncio.apply()
+import streamlit as st
 import asyncio
 # --- FIX: Must happen BEFORE any other imports ---
 try:
