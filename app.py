@@ -1,20 +1,8 @@
-import nest_asyncio
-nest_asyncio.apply()
 import streamlit as st
-import asyncio
-# --- FIX: Must happen BEFORE any other imports ---
-try:
-    asyncio.get_running_loop()
-except RuntimeError:
-    asyncio.set_event_loop(asyncio.new_event_loop())
-
-import streamlit as st
-import ee
 from google import genai
 from google.genai import types
 import json
-import folium
-import streamlit.components.v1 as components
+import pandas as pd
 
 st.set_page_config(page_title="AI Anticipatory Action", layout="wide")
 
@@ -27,7 +15,7 @@ except FileNotFoundError:
     st.stop()
 
 st.title("🌪️ Cyclone Anticipatory Action Dispatcher")
-st.markdown("Fusing Satellite DEM with Gemini 3.8 Flash for pre-landfall interventions.")
+st.markdown("Fusing Spatial Data with Gemini 3.8 Flash for pre-landfall interventions.")
 
 # Sidebar inputs
 st.sidebar.header("Meteorological Inputs")
@@ -42,11 +30,13 @@ mock_weather_json = {
     "storm_surge_m": surge_height,
 }
 
-# Map
+# Native Streamlit Map (No external libraries required)
 st.subheader("1. Geospatial Exposure Layer")
-m = folium.Map(location=[lat, lon], zoom_start=10)
-folium.Circle(radius=15000, location=[lat, lon], popup="Cyclone Cone", color="red", fill=True).add_to(m)
-components.html(m._repr_html_(), height=400)
+st.info("Simulated Cyclone Impact Zone (Lat: 19.8, Lon: 85.8)")
+# Create a simple dataframe with the coordinates
+df = pd.DataFrame({'lat': [lat], 'lon': [lon]})
+# Render using Streamlit's built-in map (immune to asyncio errors)
+st.map(df, zoom=9)
 
 # AI Reasoning
 st.subheader("2. AI Reasoning & Dispatch Generation")
