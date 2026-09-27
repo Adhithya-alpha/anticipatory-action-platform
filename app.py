@@ -5,6 +5,13 @@ from google.genai import types
 import json
 import folium
 from streamlit_folium import st_folium
+import asyncio
+
+# --- FIX: Event Loop Error ---
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 
 st.set_page_config(page_title="AI Anticipatory Action", layout="wide")
 
