@@ -1,3 +1,10 @@
+import asyncio
+# --- FIX: Must happen BEFORE any other imports ---
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 import streamlit as st
 import ee
 from google import genai
@@ -36,9 +43,6 @@ mock_weather_json = {
 st.subheader("1. Geospatial Exposure Layer")
 m = folium.Map(location=[lat, lon], zoom_start=10)
 folium.Circle(radius=15000, location=[lat, lon], popup="Cyclone Cone", color="red", fill=True).add_to(m)
-
-# --- THE BULLETPROOF MAP FIX ---
-# We bypass the broken library and render the map as pure HTML
 components.html(m._repr_html_(), height=400)
 
 # AI Reasoning
